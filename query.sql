@@ -109,3 +109,37 @@ FROM buildings
 WHERE lower(address) LIKE lower('%c%')
 ORDER BY address DESC
 LIMIT 10;
+
+SELECT * FROM buildings;
+SELECT * FROM persons;
+
+SELECT p.name AS "Nama Lengkap", p.age AS "Umur", b.address AS "Alamat" 
+FROM buildings b 
+JOIN persons p ON b.person_id = p.id;
+-- JOIN
+-- WHERE "Nama Lengkap" = 'Fajar';
+-- ORDER BY "Nama Lengkap" ASC;
+
+INSERT INTO persons (name, age)
+VALUES ('koda', 20);
+INSERT INTO buildings (area, address)
+VALUES (105, 'Tubagus Ismail');
+
+SELECT p.name, AVG(b.area) AS "Luas Tanah"
+FROM buildings b 
+FULL JOIN persons p ON b.person_id = p.id
+WHERE p.id IS NOT NULL
+AND b.id IS NOT NULL
+GROUP BY p.id
+-- HAVING COUNT(b.id) >= 10
+ORDER BY "Luas Tanah" ASC;
+
+SELECT MAX(area)
+FROM buildings;
+
+SELECT address, area
+FROM buildings
+WHERE area = (
+    SELECT MAX(area)
+    FROM buildings
+);
