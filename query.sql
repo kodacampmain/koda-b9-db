@@ -137,9 +137,46 @@ ORDER BY "Luas Tanah" ASC;
 SELECT MAX(area)
 FROM buildings;
 
-SELECT address, area
+SELECT b.address, b.area, p.name
+FROM buildings b
+JOIN persons p ON b.person_id = p.id
+WHERE b.area > (
+    SELECT AVG(area)
+    FROM buildings
+)
+ORDER BY b.area ASC;
+
+SELECT DISTINCT person_id
 FROM buildings
-WHERE area = (
+WHERE area > 180;
+
+SELECT id, name, age
+FROM persons
+WHERE id = ANY (
+    SELECT DISTINCT person_id
+    FROM buildings
+    WHERE area > 180
+);
+
+SELECT owner_with_big_area.id_orang, p.name
+FROM (
+    SELECT DISTINCT person_id AS "id_orang"
+    FROM buildings
+    WHERE area > 180
+) owner_with_big_area
+JOIN persons p ON owner_with_big_area.id_orang = p.id;
+
+SELECT owner_with_big_area.id_orang, p.name
+FROM persons p
+JOIN (
+    SELECT DISTINCT person_id AS "id_orang"
+    FROM buildings
+    WHERE area > 180
+) owner_with_big_area ON owner_with_big_area.id_orang = p.id;
+
+SELECT p.name, (
     SELECT MAX(area)
     FROM buildings
-);
+    WHERE person_id = p.id
+) AS "Max Area"
+FROM persons p;
